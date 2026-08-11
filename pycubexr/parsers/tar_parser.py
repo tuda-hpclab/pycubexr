@@ -2,7 +2,7 @@ import tarfile
 from gzip import GzipFile
 from os import PathLike
 from tarfile import TarFile
-from typing import List, Dict, Tuple, Union
+from typing import BinaryIO, List, Dict, Tuple, Union
 from xml.etree import ElementTree
 
 from pycubexr.classes import Metric, MetricValues, Region, CNode, Location
@@ -15,19 +15,39 @@ from pycubexr.utils.exceptions import MissingMetricError
 
 class CubexParser(object):
     _cubex_file: TarFile
-    _cubex_filename: Union[str, PathLike]
+    _cubex_filename: Union[str, PathLike, BinaryIO]
     _anchor_result: AnchorXMLParseResult
     _metric_values: Dict[Tuple[int, bool], MetricValues]
 
-    def __init__(self, cubex_filename: Union[str, PathLike]):
+    def __init__(self, cubex_filename: Union[str, PathLike, BinaryIO]):
+        """
+        :param cubex_filename: Either a path (str or PathLike) to a .cubex file, or an
+            already opened binary file object (e.g. from `open(path, 'rb')` or an
+            in-memory buffer) containing the .cubex tar archive.
+        """
         self._cubex_filename = cubex_filename
         self._metric_values = {}
 
     def __enter__(self):
+        is_file_obj = hasattr(self._cubex_filename, 'read')
+
+        if is_file_obj:
+            if not isinstance(self._cubex_filename.read(0), bytes):
+                raise TypeError(
+                    "cubex_filename must be a binary file object (e.g. opened with mode 'rb'), "
+                    "not a text-mode file object"
+                )
+            if not (hasattr(self._cubex_filename, 'seekable') and self._cubex_filename.seekable()):
+                raise ValueError('cubex_filename file object must be seekable')
+
+        open_kwargs = {'fileobj': self._cubex_filename} if is_file_obj else {'name': self._cubex_filename}
+
         try:
-            self._cubex_file = tarfile.open(self._cubex_filename)
+            self._cubex_file = tarfile.open(**open_kwargs)
         except tarfile.ReadError:
-            self._cubex_file = tarfile.open(self._cubex_filename, tarinfo=TarInfoWithoutCheck)
+            if is_file_obj:
+                self._cubex_filename.seek(0)
+            self._cubex_file = tarfile.open(tarinfo=TarInfoWithoutCheck, **open_kwargs)
 
         self._tar_file_member_list = [x.name for x in self._cubex_file.getmembers()]
 
