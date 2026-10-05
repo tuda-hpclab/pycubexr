@@ -1,12 +1,12 @@
 # pyCubexR
 
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/pycubexr?style=plastic)](https://badge.fury.io/py/pycubexr)
-![GitHub release (latest by date)](https://img.shields.io/github/v/release/extra-p/pycubexr?style=plastic)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/tuda-hpclab/pycubexr?style=plastic)
 [![PyPI version](https://badge.fury.io/py/pycubexr.png)](https://badge.fury.io/py/pycubexr)
 [![PyPI - License](https://img.shields.io/pypi/l/pycubexr?style=plastic)](https://badge.fury.io/py/pycubexr)
-![GitHub issues](https://img.shields.io/github/issues/extra-p/pycubexr?style=plastic)
-![GitHub pull requests](https://img.shields.io/github/issues-pr/extra-p/pycubexr?style=plastic)
-![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/extra-p/pycubexr/python-package.yml?style=plastic)
+![GitHub issues](https://img.shields.io/github/issues/tuda-hpclab/pycubexr?style=plastic)
+![GitHub pull requests](https://img.shields.io/github/issues-pr/tuda-hpclab/pycubexr?style=plastic)
+![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/tuda-hpclab/pycubexr/python-package.yml?style=plastic)
 
 pyCubexR is a Python package for reading
 the [Cube4](https://www.scalasca.org/scalasca/software/cube-4.x/download.html) (.cubex) file format. Cube is used as a
